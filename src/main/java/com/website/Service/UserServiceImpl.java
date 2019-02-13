@@ -15,7 +15,20 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
+    @Transactional
     public void addUser(User theUser) {
         userDao.addUser(theUser);
+    }
+
+    @Override
+    @Transactional
+    public boolean existsByEmail(String email) {
+        return userDao.existsByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public boolean existsByUsername(String username) {
+        return userDao.existsByUsername(username);
     }
 }
