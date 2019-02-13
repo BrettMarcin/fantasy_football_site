@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Entity(name = "users")
 @Table(name="users")
-public class User implements UserDetails, UserPrincipal {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;

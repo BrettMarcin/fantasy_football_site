@@ -21,7 +21,7 @@ public class DraftController {
     private UserService userService;
 
     @RequestMapping(value="/getUser", method = RequestMethod.GET)
-    public ResponseEntity<?> index(@CurrentUser UserPrincipal currentUser) {
+    public ResponseEntity<?> index() {
         return ResponseEntity.ok(currentUser);
     }
 
