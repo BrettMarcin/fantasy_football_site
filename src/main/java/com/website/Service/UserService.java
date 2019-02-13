@@ -1,6 +1,7 @@
 package com.website.Service;
 
 import com.website.domains.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -13,5 +14,9 @@ public interface UserService {
 
     boolean existsByUsername(String username);
 
-    User findByUsername(String username);
+    User findByUsernameOriginal(String username);
+
+    UserDetails findByUsername(String username);
+
+    UserDetails loadUserByUsername(String username);
 }

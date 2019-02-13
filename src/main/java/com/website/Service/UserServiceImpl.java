@@ -3,13 +3,15 @@ package com.website.Service;
 import com.website.Doa.UserDao;
 import com.website.domains.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private UserDao userDao;
@@ -34,7 +36,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User findByUsername(String username) {
+    public User findByUsernameOriginal(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public UserDetails loadUserByUsername(String username) {
         return userDao.findByUsername(username);
     }
 }

@@ -2,10 +2,11 @@ package com.website.controller;
 
 import com.website.Service.UserService;
 import com.website.domains.User;
-import com.website.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,14 +22,14 @@ public class DraftController {
     private UserService userService;
 
     @RequestMapping(value="/getUser", method = RequestMethod.GET)
-    public ResponseEntity<?> index() {
-        return ResponseEntity.ok(currentUser);
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal User userDetails) {
+        return ResponseEntity.ok(userDetails);
     }
 
-    @RequestMapping(value="/createUser", method = RequestMethod.POST)
-    public void createUser(@RequestBody User theUser) {
-        userService.addUser(theUser);
-    }
+//    @RequestMapping(value="/createUser", method = RequestMethod.POST)
+//    public void createUser(@RequestBody User theUser) {
+//        userService.addUser(theUser);
+//    }
 
 
 //

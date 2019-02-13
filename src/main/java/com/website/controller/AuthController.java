@@ -5,7 +5,6 @@ import com.website.domains.ApiResponse;
 import com.website.domains.LoginRequest;
 import com.website.domains.SignUpRequest;
 import com.website.domains.User;
-import com.website.security.JwtAuthenticationResponse;
 import com.website.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +53,7 @@ public class AuthController {
         try {
             String username = loginRequest.getUsernameOrEmail();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, loginRequest.getPassword()));
-            User user = userService.findByUsername(username);
+            User user = userService.findByUsernameOriginal(username);
             if (user == null) {
                 throw new BadCredentialsException("User does not exitst");
             }
