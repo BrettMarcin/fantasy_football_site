@@ -1,10 +1,7 @@
-package com.website.Service;
+package com.website.service;
 
 import com.website.domains.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 
 public interface UserService {
 

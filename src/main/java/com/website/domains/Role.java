@@ -10,6 +10,7 @@ public class Role {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
 
     @Column(name = "role_name")
@@ -19,6 +20,11 @@ public class Role {
     @Column(name = "description")
     @JsonProperty
     private String description;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "the_user_name")
+    @JsonProperty
+    private User theUser;
 
 
     public Long getId() {
@@ -43,5 +49,13 @@ public class Role {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setTheUser(User theUser) {
+        this.theUser = theUser;
+    }
+
+    public User getTheUser() {
+        return theUser;
     }
 }

@@ -1,6 +1,7 @@
 package com.website.security;
 
 import com.website.domains.Role;
+import com.website.exception.ExpiredToken;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +20,11 @@ import java.util.List;
 @Component
 public class JwtTokenProvider {
 
-    @Value("${security.jwt.token.secret-key:secret}")
-    private String secretKey = "secret";
+    @Value("${security.jwt.token.secret-key}")
+    private String secretKey;
 
-    @Value("${security.jwt.token.expire-length:3600000}")
-    private long validityInMilliseconds = 3600000; // 1h
+    @Value("${security.jwt.token.expire-length}")
+    private long validityInMilliseconds; // 1h
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -69,14 +70,13 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
             if (claims.getBody().getExpiration().before(new Date())) {
                 return false;
             }
 
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new IllegalArgumentException("Expired or invalid JWT token");
+            throw new ExpiredToken();
         }
     }
 

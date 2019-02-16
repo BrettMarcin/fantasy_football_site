@@ -1,6 +1,10 @@
 package com.website.domains;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +20,7 @@ import java.util.stream.Collectors;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column
     private Integer id;
 
     @JsonProperty
@@ -34,19 +39,27 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
 
-    @JsonProperty
-    @Column(nullable = true)
-    private Integer role_id;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "id")
-    //@JoinColumn(name = "role_id", nullable = false)
+    //@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "theUser")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "theUser")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonProperty
     private List<Role> roles;
 
-    //private Collection<? extends GrantedAuthority> authorities;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userCreated")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonProperty
+    private List<Draft> draft;
 
-//    User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
-//            signUpRequest.getEmail(), signUpRequest.getPassword());
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "draft_users_accepted",
+            joinColumns = { @JoinColumn(name = "users_name") },
+            inverseJoinColumns = { @JoinColumn(name = "draft_id") }
+    )
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonProperty
+    private List<Draft> acceptedDrafts;
+
     public User (String name, String userName, String email, String password) {
         this.name = name;
         this.userName = userName;
@@ -57,21 +70,6 @@ public class User implements UserDetails {
     public User() {
 
     }
-
-//    public static UserPrincipal create(User user) {
-//        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-//                new SimpleGrantedAuthority(role.getName().name())
-//        ).collect(Collectors.toList());
-//
-//        return new UserPrincipal(
-//                user.getId(),
-//                user.getName(),
-//                user.getUsername(),
-//                user.getEmail(),
-//                user.getPassword(),
-//                null
-//        );
-//    }
 
     public String getEmail() {
         return email;

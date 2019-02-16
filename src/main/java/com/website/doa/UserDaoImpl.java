@@ -1,4 +1,4 @@
-package com.website.Doa;
+package com.website.doa;
 
 import com.website.domains.User;
 import org.springframework.stereotype.Repository;

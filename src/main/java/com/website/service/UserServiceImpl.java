@@ -1,11 +1,10 @@
-package com.website.Service;
+package com.website.service;
 
-import com.website.Doa.UserDao;
+import com.website.doa.UserDao;
 import com.website.domains.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -49,6 +48,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        return userDao.findByUsername(username);
+        UserDetails user = userDao.findByUsername(username);
+        return user;
     }
 }

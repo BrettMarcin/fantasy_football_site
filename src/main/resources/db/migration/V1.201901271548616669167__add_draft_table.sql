@@ -1,3 +1,15 @@
+drop table if exists draft;
+
+Create table draft (
+	id int AUTO_INCREMENT PRIMARY KEY,
+	created_at timestamp default current_timestamp,
+	draft_started tinyint(1) NOT NULL,
+	is_public tinyint(1) NOT NULL,
+	user_id int,
+	KEY user_id (user_id),
+	FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
 -- drop table if exists users_roles;
 
 -- Create table users_roles (
