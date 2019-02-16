@@ -1,4 +1,4 @@
-package com.website.domains;
+package com.website.domains.api_specific;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
