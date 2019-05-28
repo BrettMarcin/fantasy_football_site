@@ -1,6 +1,6 @@
 package com.website.service;
 
-import com.website.domains.User;
+import com.website.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {

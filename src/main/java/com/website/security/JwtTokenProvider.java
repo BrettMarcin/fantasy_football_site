@@ -1,6 +1,6 @@
 package com.website.security;
 
-import com.website.domains.Role;
+import com.website.domain.Role;
 import com.website.exception.ExpiredToken;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;

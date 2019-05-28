@@ -1,19 +1,15 @@
-package com.website.domains;
+package com.website.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.nio.file.attribute.UserPrincipal;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Entity(name = "users")
 @Table(name="users")
@@ -39,9 +35,12 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String email;
 
-    //@OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "theUser")
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "theUser")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToMany(targetEntity = Role.class, cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "users_role",
+            joinColumns = { @JoinColumn(name = "role_id") },
+            inverseJoinColumns = { @JoinColumn(name = "users_name") }
+    )
     @JsonProperty
     private List<Role> roles;
 
@@ -50,15 +49,18 @@ public class User implements UserDetails {
     @JsonProperty
     private List<Draft> draft;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(targetEntity = Draft.class, cascade = { CascadeType.ALL })
     @JoinTable(
             name = "draft_users_accepted",
-            joinColumns = { @JoinColumn(name = "users_name") },
-            inverseJoinColumns = { @JoinColumn(name = "draft_id") }
+            joinColumns = { @JoinColumn(name = "draft_id") },
+            inverseJoinColumns = { @JoinColumn(name = "users_name") }
     )
-    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonProperty
-    private List<Draft> acceptedDrafts;
+    private Set<Draft> acceptedDrafts;
+
+    @ManyToMany(mappedBy = "usersInvited", cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JsonProperty
+    private Set<Draft> draftsInvitedTo;
 
     public User (String name, String userName, String email, String password) {
         this.name = name;

@@ -1,6 +1,6 @@
 package com.website.doa;
 
-import com.website.domains.Draft;
+import com.website.domain.Draft;
 
 import java.math.BigInteger;
 import java.util.List;

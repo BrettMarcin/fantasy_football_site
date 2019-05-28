@@ -1,6 +1,6 @@
 package com.website.doa;
 
-import com.website.domains.Draft;
+import com.website.domain.Draft;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

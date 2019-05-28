@@ -1,7 +1,7 @@
 package com.website.service;
 
-import com.website.domains.Draft;
-import com.website.domains.User;
+import com.website.domain.Draft;
+import com.website.domain.User;
 
 public interface DraftService {
 

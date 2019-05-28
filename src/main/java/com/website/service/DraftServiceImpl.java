@@ -1,8 +1,8 @@
 package com.website.service;
 
 import com.website.doa.DraftDao;
-import com.website.domains.Draft;
-import com.website.domains.User;
+import com.website.domain.Draft;
+import com.website.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

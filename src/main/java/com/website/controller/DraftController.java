@@ -1,10 +1,10 @@
 package com.website.controller;
 
-import com.website.domains.Draft;
+import com.website.domain.Draft;
 import com.website.service.DraftService;
 import com.website.service.UserService;
-import com.website.domains.api_specific.ApiResponse;
-import com.website.domains.User;
+import com.website.domain.api_specific.ApiResponse;
+import com.website.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

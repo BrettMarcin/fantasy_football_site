@@ -1,7 +1,7 @@
 package com.website.interceptors;
 
 
-import com.website.domains.User;
+import com.website.domain.User;
 import com.website.exception.TooManyDraftException;
 import com.website.service.DraftService;
 import org.springframework.beans.factory.annotation.Autowired;

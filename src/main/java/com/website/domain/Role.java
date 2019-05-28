@@ -1,8 +1,9 @@
-package com.website.domains;
+package com.website.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name="role")
@@ -21,10 +22,14 @@ public class Role {
     @JsonProperty
     private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "the_user_name")
+    @ManyToMany(targetEntity = Role.class, cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "users_role",
+            joinColumns = { @JoinColumn(name = "users_name") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
     @JsonProperty
-    private User theUser;
+    private Set<User> theUser;
 
 
     public Long getId() {
@@ -51,11 +56,11 @@ public class Role {
         this.description = description;
     }
 
-    public void setTheUser(User theUser) {
-        this.theUser = theUser;
+    public Set<User> getTheUser() {
+        return theUser;
     }
 
-    public User getTheUser() {
-        return theUser;
+    public void setTheUser(Set<User> theUser) {
+        this.theUser = theUser;
     }
 }

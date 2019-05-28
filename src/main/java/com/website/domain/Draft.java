@@ -1,12 +1,12 @@
-package com.website.domains;
+package com.website.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.security.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "draft")
@@ -36,11 +36,18 @@ public class Draft {
     boolean isPublic;
 
     @ManyToMany(mappedBy = "acceptedDrafts")
-    List<User> usersAccepted;
+    Set<User> usersAccepted;
 
-//    List<User> usersInvited;
 
-//    List<String> draftOrder;
+    @ManyToMany(cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "draft_users_invited",
+            joinColumns = { @JoinColumn(name = "users_name") },
+            inverseJoinColumns = { @JoinColumn(name = "draft_id") }
+    )
+    Set<User> usersInvited;
+
+//    Set<String> draftOrder;
 
     @PrePersist
     protected void onCreate() {
@@ -85,13 +92,5 @@ public class Draft {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
-    }
-
-    public List<User> getUsersAccepted() {
-        return usersAccepted;
-    }
-
-    public void setUsersAccepted(List<User> usersAccepted) {
-        this.usersAccepted = usersAccepted;
     }
 }

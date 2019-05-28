@@ -16,4 +16,14 @@ public class DraftExceptionController {
     public ResponseEntity<Object> expiredToken(ExpiredToken exception) {
         return new ResponseEntity<>("Token has expired", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = UsernameInvalidException.class)
+    public ResponseEntity<Object> usernameInvalidException(UsernameInvalidException exception) {
+        return new ResponseEntity<>("Username already taken", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = EmailInvalidException.class)
+    public ResponseEntity<Object> emailInvalidException(EmailInvalidException exception) {
+        return new ResponseEntity<>("Email already taken", HttpStatus.BAD_REQUEST);
+    }
 }

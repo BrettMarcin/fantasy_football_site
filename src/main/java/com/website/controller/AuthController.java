@@ -1,9 +1,9 @@
 package com.website.controller;
 
 import com.website.service.UserService;
-import com.website.domains.api_specific.ApiResponse;
-import com.website.domains.api_specific.LoginRequest;
-import com.website.domains.User;
+import com.website.domain.api_specific.ApiResponse;
+import com.website.domain.api_specific.LoginRequest;
+import com.website.domain.User;
 import com.website.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,18 +54,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody User user) {
-        if(userService.existsByUsername(user.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if(userService.existsByEmail(user.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-        user.setPassword(customPasswordEncoder.encode(user.getPassword()));
         userService.addUser(user);
-
         return new ResponseEntity(new ApiResponse(true, "User registered successfully"), HttpStatus.CREATED);
     }
 }
