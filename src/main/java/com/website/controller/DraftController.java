@@ -8,11 +8,9 @@ import com.website.domains.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -37,13 +35,5 @@ public class DraftController {
         draftService.createDraft(userDetails, draft);
         return new ResponseEntity(new ApiResponse(true, "Successfully created draft"), HttpStatus.CREATED);
     }
-
-
-//
-//    @RequestMapping(value="/auth", method = RequestMethod.GET)
-//    @PreAuthorize("hasAuthority('STANDARD_USER')")
-//    public void auth() {
-//
-//    }
 
 }

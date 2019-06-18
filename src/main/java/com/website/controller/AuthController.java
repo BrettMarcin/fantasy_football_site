@@ -1,5 +1,6 @@
 package com.website.controller;
 
+import com.website.domains.Token;
 import com.website.service.UserService;
 import com.website.domains.api_specific.ApiResponse;
 import com.website.domains.api_specific.LoginRequest;
@@ -46,7 +47,8 @@ public class AuthController {
                 throw new BadCredentialsException("User does not exitst");
             }
             String token = jwtTokenProvider.createToken(username, user.getRoles());
-            return ResponseEntity.ok(token);
+            Token token1 = new Token(token);
+            return ResponseEntity.ok(token1);
         } catch (AuthenticationException e) {
             throw new BadCredentialsException("Invalid username/password supplied");
         }
