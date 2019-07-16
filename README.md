@@ -1,6 +1,13 @@
 fantasy_football_site
 
+###start mysql
+````
+sudo /usr/local/mysql/support-files/mysql.server start
+````
+###Run spring boot application
+````
 mvn clean install spring-boot:run -Dspring.profiles.active=local -DdatabaseURL=jdbc:mysql://localhost:3306/football -DdatabaseUser= -DdatabasePass= -Dsecurity.jwt.token.secret-key=
+````
 
 ## Register user: POST: /api/auth/signup
 

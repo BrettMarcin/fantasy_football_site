@@ -35,9 +35,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/auth/signin").permitAll()
                 .antMatchers("/api/auth/signup").permitAll()
+                .antMatchers("/api/getDraftDetails/*").permitAll()
+                .antMatchers("/draft-socket").permitAll()
+                .antMatchers("/stomp/*").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
+//        http.logout().logoutUrl("/api/auth/logout");
         //.antMatchers(HttpMethod.DELETE, "/vehicles/**").hasRole("ADMIN")
     }
 }

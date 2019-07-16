@@ -16,4 +16,14 @@ public class DraftExceptionController {
     public ResponseEntity<Object> expiredToken(ExpiredToken exception) {
         return new ResponseEntity<>("Token has expired", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(value = CannotJoinDraftException.class)
+    public ResponseEntity<Object> cannotJoinDraftException(CannotJoinDraftException exception) {
+        return new ResponseEntity<>("User was not invited or the draft has already started", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = NotCreatorOfDraftException.class)
+    public ResponseEntity<Object> notCreatorOfDraftException(NotCreatorOfDraftException exception) {
+        return new ResponseEntity<>("Sorry, You are not the owner of the draft", HttpStatus.UNAUTHORIZED);
+    }
 }

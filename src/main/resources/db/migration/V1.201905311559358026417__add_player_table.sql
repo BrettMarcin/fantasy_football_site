@@ -19,6 +19,7 @@ Create table player (
   rec int
 );
 
+insert into player (first_name, last_name, rank_player, team, total_pts, games_played, rush_yards, rush_tds, pass_yards, pass_tds, fumbles, interceptions, position, rec_yards, rec)  values ('default', 'default', 0, 'NA', 0, 0, 0, 0, 0, 0, 0, 0, 'NA', 0, 0);
 insert into player (first_name, last_name, rank_player, team, total_pts, games_played, rush_yards, rush_tds, pass_yards, pass_tds, fumbles, interceptions, position, rec_yards, rec)  values ('Saquon', 'Barkley', 1, 'NYG', 294, 16, 1307, 11, 0, 0, 0, 0, 'RB', 721, 91);
 insert into player (first_name, last_name, rank_player, team, total_pts, games_played, rush_yards, rush_tds, pass_yards, pass_tds, fumbles, interceptions, position, rec_yards, rec)  values ('Ezekiel', 'Elliott', 2, 'DAL', 252, 15, 1435, 6, 0, 0, 1, 0, 'RB', 567, 77);
 insert into player (first_name, last_name, rank_player, team, total_pts, games_played, rush_yards, rush_tds, pass_yards, pass_tds, fumbles, interceptions, position, rec_yards, rec)  values ('Christian', 'McCaffrey', 3, 'CAR', 278, 16, 1098, 7, 0, 0, 1, 0, 'RB', 867, 107);

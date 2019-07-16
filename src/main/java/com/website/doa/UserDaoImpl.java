@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -16,6 +17,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addUser(User theUser) {
         entityManager.persist( theUser );
+    }
+
+    @Override
+    public List<String> getUserNames(){
+        String sql = "select user_name from users";
+        Query theQ = entityManager.createNativeQuery(sql);
+        return (List<String>)theQ.getResultList();
     }
 
     @Override
@@ -40,15 +48,33 @@ public class UserDaoImpl implements UserDao {
         Query theQ = entityManager.createNativeQuery(sql, User.class);
         theQ.setParameter("email", email);
         int result = theQ.getMaxResults();
-        return result == 1;
+        return result >= 1;
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        String sql = "select count(*) as count from users where username=:username";
-        Query theQ = entityManager.createNativeQuery(sql, User.class);
+        String sql = "select count(*) from users where user_name=:username";
+        Query theQ = entityManager.createNativeQuery(sql);
         theQ.setParameter("username", username);
-        int result = theQ.getMaxResults();
-        return result == 1;
+        Integer result = ((Number)theQ.getSingleResult()).intValue();
+        return result >= 1;
+    }
+
+    @Override
+    public List<String> getInvitedUsers(Integer id) {
+        String sql = "select invited_user from draft_users_invited where draft_id=:draftID";
+        Query theQ = entityManager.createNativeQuery(sql);
+        theQ.setParameter("draftID", id);
+        List<String> result  = (List<String>)theQ.getResultList();
+        return result;
+    }
+
+    @Override
+    public List<String> getAcceptedUsers(Integer id) {
+        String sql = "select accepted_user from draft_users_accepted where draft_id=:draftID";
+        Query theQ = entityManager.createNativeQuery(sql);
+        theQ.setParameter("draftID", id);
+        List<String> result  = (List<String>)theQ.getResultList();
+        return result;
     }
 }
