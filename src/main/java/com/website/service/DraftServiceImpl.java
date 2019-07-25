@@ -4,10 +4,7 @@ import com.google.common.collect.Lists;
 import com.website.bean.DraftTimers;
 import com.website.doa.DraftDao;
 import com.website.doa.UserDao;
-import com.website.domains.Draft;
-import com.website.domains.GetDrafts;
-import com.website.domains.Picks;
-import com.website.domains.User;
+import com.website.domains.*;
 import com.website.domains.api_specific.DraftHasStarted;
 import com.website.domains.api_specific.UserInvitedAndAccepted;
 import com.website.exception.TooManyDraftException;
@@ -42,9 +39,9 @@ public class DraftServiceImpl implements DraftService {
 
     @Override
     @Transactional
-    public boolean checkIfCreatedTwo(int userId) {
-        long count = draftDao.getDraftCreatedByUser(userId);
-        return count > 1;
+    public boolean checkIfCreatedTwo(String username) {
+        long count = draftDao.getDraftCreatedByUser(username);
+        return count > 2;
     }
 
     @Override
@@ -181,15 +178,130 @@ public class DraftServiceImpl implements DraftService {
 
     @Override
     @Transactional
-    public List<Picks> getPlayersRemaining(int draftId) {
-        // select * from picks where draft_id_picks = 12 order by round ASC;
-        List<Object> list = draftDao.getPicks(draftId);
-        List<Picks> picks = new ArrayList<>();
+    public List<Player> getPlayersRemaining(int draftId) {
+        List<Object> list = draftDao.getPlayersRemaining(draftId);
+        List<Player> players = new ArrayList<>();
         for (Object pick : list) {
             Object[] ob = (Object[])pick;
-            picks.add(new Picks((String)ob[0], (int)ob[4], (int)ob[5]));
+            Player player = new Player((int)ob[0],(String)ob[1],(String)ob[2],(int)ob[3],(String)ob[4],(float)ob[5],((Byte)ob[6]).intValue(),(int)ob[7],(int)ob[8],(int)ob[9],(int)ob[10],(int)ob[11],(int)ob[12],(String)ob[13],(int)ob[14],(int)ob[15]);
+            players.add(player);
         }
-        return picks;
+        return players;
+    }
+
+    @Override
+    @Transactional
+    public void checkDraftsThatWereRunning() {
+        draftDao.checkDraftsThatWereRunning();
+    }
+
+    @Override
+    @Transactional
+    public void resumeDraft(int draftId) {
+        draftDao.resumeDraft(draftId);
+        draftTimers.createNewTimer(draftId);
+        this.template.convertAndSend("/draft/draftStarted/"+draftId, "Draft has Started!");
+    }
+
+    @Override
+    @Transactional
+    public void draftPlayer(int draftId, Picks pick) {
+        draftDao.draftPlayer(draftId, pick);
+        this.template.convertAndSend("/draft/pickSelected/"+draftId, pick);
+        draftTimers.resetTimer(draftId);
+        this.checkEndDraft(draftId);
+    }
+
+    @Override
+    @Transactional
+    public Picks getMostRecentPicksDraft(int draftId) {
+        Object[] pick = (Object[])draftDao.getMostRecentPicksDraft(draftId);
+        return new Picks((String)pick[0], (int)pick[1], (int)pick[4],(int)pick[5]);
+        //        this.template.convertAndSend("/draft/draftStarted/"+draftId, "Draft has Started!");
+    }
+    //
+    @Override
+    @Transactional
+    public List<Picks> getPickHistory(int draftId) {
+        List<Object> picks = (List<Object>)draftDao.getPickHistory(draftId);
+        List<Picks> completePicks = new ArrayList<>();
+        for (Object pick : picks) {
+            Object[] pickArray = (Object[])pick;
+            // Picks(String username, int draftId, int round, int pickNumber)
+            Picks thePick = new Picks((String)pickArray[0], (int)pickArray[1], (int)pickArray[4],(int)pickArray[5]);
+            Player player = new Player((int)pickArray[6],(String)pickArray[7],(String)pickArray[8],(int)pickArray[9],(String)pickArray[10],(float)pickArray[11],((Byte)pickArray[12]).intValue(),(int)pickArray[13],(int)pickArray[14],(int)pickArray[15],(int)pickArray[16],(int)pickArray[17],(int)pickArray[18],(String)pickArray[19],(int)pickArray[20],(int)pickArray[21]);
+            thePick.setThePlayer(player);
+            completePicks.add(thePick);
+        }
+        return completePicks;
+    }
+
+    @Override
+    @Transactional
+    public String getDraftOwner(int draftId) {
+        return draftDao.getDraftOwner(draftId);
+    }
+
+    @Override
+    @Transactional
+    public List<String> getPlayersInDraft(int draftId) {
+        List<String> users = userDao.getAcceptedUsers(draftId);
+        users.add(this.getDraftOwner(draftId));
+        return users;
+    }
+
+    @Override
+    @Transactional
+    public List<Player> getPlayersTeamDrafted(int draftId, String username) {
+        List<Object> players = draftDao.getPlayersTeamDrafted(draftId, username);
+        List<Player> playersList = new ArrayList<>();
+        for (Object pick : players) {
+            Object[] ob = (Object[])pick;
+            Player player = new Player((int)ob[0],(String)ob[1],(String)ob[2],(int)ob[3],(String)ob[4],(float)ob[5],((Byte)ob[6]).intValue(),(int)ob[7],(int)ob[8],(int)ob[9],(int)ob[10],(int)ob[11],(int)ob[12],(String)ob[13],(int)ob[14],(int)ob[15]);
+            playersList.add(player);
+        }
+//        users.add(this.getDraftOwner(draftId));
+//        return users;
+        return playersList;
+    }
+
+    @Override
+    @Transactional
+    public void draftHighestRankedPlayer(int draftId) {
+        Object[] pickArray = (Object[])draftDao.getMostRecentPicksDraft(draftId);
+        Object[] ob = (Object[])draftDao.getLowestRankedPlayer(draftId);
+        Picks pick = new Picks((String)pickArray[0], (int)pickArray[1], (int)pickArray[4],(int)pickArray[5]);
+        Player player = new Player((int)ob[0],(String)ob[1],(String)ob[2],(int)ob[3],(String)ob[4],(float)ob[5],((Byte)ob[6]).intValue(),(int)ob[7],(int)ob[8],(int)ob[9],(int)ob[10],(int)ob[11],(int)ob[12],(String)ob[13],(int)ob[14],(int)ob[15]);
+        pick.setThePlayer(player);
+        this.draftPlayer(draftId, pick);
+    }
+
+    @Override
+    @Transactional
+    public void checkEndDraft(int draftId) {
+        long pickRemain = draftDao.checkPicksRemaining(draftId);
+        if (pickRemain == 0) {
+            draftDao.endDraft(draftId);
+            this.template.convertAndSend("/draft/hasDraftEnded/" + draftId, true);
+            draftTimers.stopTimer(draftId);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void changeEndedDraftsToEndStatus() {
+        List<Integer> drafts = draftDao.getDraftRunning();
+        for (Integer draftId : drafts) {
+            this.checkEndDraft(draftId.intValue());
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteDraft(int draftId) {
+        List<BigInteger> list = new ArrayList<>(draftId);
+        list.add(BigInteger.valueOf(draftId));
+        draftDao.removeDrafts(list);
     }
 
 }

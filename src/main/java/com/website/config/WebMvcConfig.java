@@ -23,14 +23,20 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     private CheckIfDraftOwnerInterceptor checkIfDraftOwnerInterceptor;
 
     @Autowired
-    private CheckIfDraftHasStartedInterceptor checkIfDraftHasStartedInterceptor;
+    private CheckIfUserIsPicking checkIfUserIsPicking;
 
+    @Autowired
+    private CheckIfUserCanDeleteDraft checkIfUserCanDeleteDraft;
+    
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(createDraftInterceptor).addPathPatterns("/api/createDraft");
         registry.addInterceptor(joinDraftInterceptor).addPathPatterns("/api/joinDraft/*");
         registry.addInterceptor(inviteMoreUsersInterceptor).addPathPatterns("/api/invitedMoreUsers/*");
         registry.addInterceptor(checkIfDraftOwnerInterceptor).addPathPatterns("/api/startDraft/*");
+        registry.addInterceptor(checkIfDraftOwnerInterceptor).addPathPatterns("/api/resumeDraft/*");
+        registry.addInterceptor(checkIfUserCanDeleteDraft).addPathPatterns("/api/deleteDraft/*");
+        registry.addInterceptor(checkIfUserIsPicking).addPathPatterns("/api/pickPlayer/*");
 //        registry.addInterceptor(checkIfDraftHasStartedInterceptor).addPathPatterns("/api/invitedMoreUsers/*");
     }
 }

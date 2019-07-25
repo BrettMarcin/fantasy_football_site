@@ -43,6 +43,10 @@ public class Draft {
     @Column(name="is_public")
     boolean isPublic;
 
+    @JsonProperty
+    @Column(name="was_running")
+    private String wasRunning;
+
     @Transient
     @JsonProperty
     List<String> usersAccepted;
@@ -66,6 +70,7 @@ public class Draft {
                 this.setUserCreated(new User((String)ob[6]));
                 usersAccepted = new ArrayList<>();
                 usersInvited = new ArrayList<>();
+                this.wasRunning = (String)ob[7];
             }
             i++;
             if (!userAccpetedFound.contains((String)ob[0])) {
@@ -87,6 +92,7 @@ public class Draft {
             this.draftStarted = (Boolean) ob[2];
             this.isPublic = (Boolean) ob[3];
             this.setUserCreated(new User((String)ob[4]));
+            this.wasRunning = (String)ob[5];
     }
 
     public Draft() {
@@ -151,5 +157,13 @@ public class Draft {
 
     public void setUsersInvited(List<String> usersInvited) {
         this.usersInvited = usersInvited;
+    }
+
+    public String getWasRunning() {
+        return wasRunning;
+    }
+
+    public void setWasRunning(String wasRunning) {
+        this.wasRunning = wasRunning;
     }
 }

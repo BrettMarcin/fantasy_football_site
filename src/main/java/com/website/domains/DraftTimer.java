@@ -17,26 +17,33 @@ public class DraftTimer {
 
     private int draftId;
 
+    private DraftUserTask storeDraftUserTask;
+
     public DraftTimer(int draftId) {
         this.draftId = draftId;
-
         DraftUserTask draftUserTask = new DraftUserTask(draftId);
+        storeDraftUserTask = draftUserTask;
         draftUserTime = new Timer(true);
         draftUserTime.scheduleAtFixedRate(draftUserTask, 0, 120000);
     }
 
-
-    public void draftUser() {
-        System.out.println("need to implement feature to call service");
-        DraftUserTask draftUserTask = new DraftUserTask(draftId);
+    public void stopTimer() {
+        storeDraftUserTask.stopTimer();
         draftUserTime.purge();
-        draftUserTime.scheduleAtFixedRate(draftUserTask, 0, 120000);
+        draftUserTime.cancel();
     }
 
     public void resetTime() {
-        SendTimeTask sendTimeTask = new SendTimeTask(System.currentTimeMillis(), draftId);
-//        sendCurrentTime.purge();
-//        sendCurrentTime.scheduleAtFixedRate(sendTimeTask, 0,1000);
+        //SendTimeTask sendTimeTask = new SendTimeTask(System.currentTimeMillis(), draftId);
+        // cancel the timer in the timer
+        storeDraftUserTask.stopTimer();
+        DraftUserTask draftUserTask = new DraftUserTask(draftId);
+        storeDraftUserTask = draftUserTask;
+        draftUserTime.purge();
+        // then cancel the timer
+        draftUserTime.cancel();
+        draftUserTime = new Timer(true);
+        draftUserTime.scheduleAtFixedRate(draftUserTask, 0, 120000);
     }
 
 }

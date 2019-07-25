@@ -26,4 +26,19 @@ public class DraftExceptionController {
     public ResponseEntity<Object> notCreatorOfDraftException(NotCreatorOfDraftException exception) {
         return new ResponseEntity<>("Sorry, You are not the owner of the draft", HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(value = UserCannotDraftException.class)
+    public ResponseEntity<Object> userCannotDraft(UserCannotDraftException exception) {
+        return new ResponseEntity<>("Sorry, You can't draft yet", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = CantDeleteNotificationException.class)
+    public ResponseEntity<Object> cantDeleteNotification(CantDeleteNotificationException exception) {
+        return new ResponseEntity<>("Sorry you do not own this notification", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(value = DraftRunningException.class)
+    public ResponseEntity<Object> draftRunningException(DraftRunningException exception) {
+        return new ResponseEntity<>("Sorry can't delete a draft that was running", HttpStatus.UNAUTHORIZED);
+    }
 }

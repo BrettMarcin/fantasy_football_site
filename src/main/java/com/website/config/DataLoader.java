@@ -2,6 +2,7 @@ package com.website.config;
 
 import com.website.domains.Role;
 import com.website.domains.User;
+import com.website.service.DraftService;
 import com.website.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -16,6 +17,8 @@ public class DataLoader implements ApplicationRunner {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private DraftService draftService;
 
     // add test User
     public void run(ApplicationArguments args) {
@@ -47,5 +50,10 @@ public class DataLoader implements ApplicationRunner {
             theUser.getRoles().add(theRole);
             userService.addUser(theUser);
         }
+
+        draftService.changeEndedDraftsToEndStatus();
+        draftService.checkDraftsThatWereRunning();
+
+        draftService.checkIfDraftsHasExpired();
     }
 }

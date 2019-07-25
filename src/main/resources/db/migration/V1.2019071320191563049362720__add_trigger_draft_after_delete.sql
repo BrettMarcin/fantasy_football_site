@@ -7,3 +7,13 @@ for each row
   end#
 
 delimiter ;
+
+delimiter #
+
+create procedure select_notfication(IN user char(20))
+  begin
+    select * from notification where user_belongs = user;
+    update notification set has_been_read = 1 where user_belongs = user;
+  end#
+
+delimiter ;

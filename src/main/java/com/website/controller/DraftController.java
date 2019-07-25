@@ -1,15 +1,13 @@
 package com.website.controller;
 
 import com.website.bean.DraftTimers;
-import com.website.domains.Draft;
-import com.website.domains.Message;
-import com.website.domains.OutputMessage;
+import com.website.domains.*;
 import com.website.domains.api_specific.ListOfUsers;
+import com.website.domains.api_specific.NumberNotifications;
 import com.website.domains.api_specific.UserInvitedAndAccepted;
 import com.website.service.DraftService;
 import com.website.service.UserService;
 import com.website.domains.api_specific.ApiResponse;
-import com.website.domains.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -110,7 +108,55 @@ public class DraftController {
 
     @RequestMapping(value="/getPlayersRemaining/{draftId}", method = RequestMethod.GET)
     public ResponseEntity<?> getPlayers(@PathVariable("draftId") Integer draftId) {
-        return ResponseEntity.ok(draftService.getPlayers(draftId));
+        return ResponseEntity.ok(draftService.getPlayersRemaining(draftId));
     }
 
+    @RequestMapping(value="/resumeDraft/{draftId}", method = RequestMethod.POST)
+    public ResponseEntity<?> resumeDraft(@PathVariable("draftId") Integer draftId) {
+        draftService.resumeDraft(draftId);
+        return new ResponseEntity(new ApiResponse(true, "Successfully resumed draft"), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/pickPlayer/{draftId}", method = RequestMethod.POST)
+    public ResponseEntity<?> pickPlayer(@PathVariable("draftId") Integer draftId, @RequestBody Picks pick) {
+        draftService.draftPlayer(draftId, pick);
+        return new ResponseEntity(new ApiResponse(true, "Successfully resumed draft"), HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value="/getPickHistory/{draftId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPickHistory(@PathVariable("draftId") Integer draftId) {
+        return ResponseEntity.ok(draftService.getPickHistory(draftId));
+    }
+
+    @RequestMapping(value="/getPlayersDuringDraft/{draftId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPlayersDuringDraft(@PathVariable("draftId") Integer draftId) {
+        return ResponseEntity.ok(draftService.getPlayersInDraft(draftId));
+    }
+
+    @RequestMapping(value="/getPlayersTeamDrafted/{draftId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPlayersTeamDrafted(@PathVariable("draftId") Integer draftId, @RequestParam String user) {
+        return ResponseEntity.ok(draftService.getPlayersTeamDrafted(draftId, user));
+    }
+
+    @RequestMapping(value="/getNumberOfNotification", method = RequestMethod.GET)
+    public ResponseEntity<?> getNumberOfNotification(@AuthenticationPrincipal User userDetails) {
+        return ResponseEntity.ok(new NumberNotifications(userService.getNumberOfNotification(userDetails.getUsername())));
+    }
+
+    @RequestMapping(value="/getNotifications", method = RequestMethod.GET)
+    public ResponseEntity<?> getNotifications(@AuthenticationPrincipal User userDetails) {
+        return ResponseEntity.ok(userService.getNotifications(userDetails.getUsername()));
+    }
+
+    @RequestMapping(value="/deleteNotification", method = RequestMethod.POST)
+    public ResponseEntity<?> deleteNotification(@AuthenticationPrincipal User userDetails, @RequestBody Notification not) {
+        userService.deleteNotification(not, userDetails.getUsername());
+        return new ResponseEntity(new ApiResponse(true, "Successfully created draft"), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/deleteDraft/{draftId}", method = RequestMethod.GET)
+    public ResponseEntity<?> deleteDraft(@AuthenticationPrincipal User userDetails, @PathVariable("draftId") Integer draftId) {
+        draftService.deleteDraft(draftId);
+        return new ResponseEntity(new ApiResponse(true, "Successfully deleted draft"), HttpStatus.OK);
+    }
 }

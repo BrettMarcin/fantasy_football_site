@@ -26,5 +26,12 @@ public class DraftTimers {
 
     public void resetTimer(int draftId) {
         map.get(draftId).resetTime();
+
+    }
+
+    public void stopTimer(int draftId) {
+        if (map.containsKey(draftId)) {
+            map.get(draftId).stopTimer();
+        }
     }
 }

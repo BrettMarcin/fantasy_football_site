@@ -20,7 +20,7 @@ public class Player {
     private String team;
 
     @JsonProperty
-    private int totalPts;
+    private float totalPts;
 
     @JsonProperty
     private int gamesPlayed;
@@ -52,7 +52,7 @@ public class Player {
     @JsonProperty
     private int rec;
 
-    public Player(int id, String firstName, String lastName, int rank_player, String team, int totalPts, int gamesPlayed, int rushYards, int rushTds, int passYards, int passTds, int fumbles, int interceptions, String postion, int recYards, int rec) {
+    public Player(int id, String firstName, String lastName, int rank_player, String team, float totalPts, int gamesPlayed, int rushYards, int rushTds, int passYards, int passTds, int fumbles, int interceptions, String postion, int recYards, int rec) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -70,6 +70,8 @@ public class Player {
         this.recYards = recYards;
         this.rec = rec;
     }
+
+//    public Player(int id, String firstName, String lastName, int rank_player, String team,)
 
     public Player() {
     }
@@ -114,11 +116,11 @@ public class Player {
         this.team = team;
     }
 
-    public int getTotalPts() {
+    public float getTotalPts() {
         return totalPts;
     }
 
-    public void setTotalPts(int totalPts) {
+    public void setTotalPts(float totalPts) {
         this.totalPts = totalPts;
     }
 

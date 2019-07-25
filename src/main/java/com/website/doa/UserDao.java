@@ -1,5 +1,6 @@
 package com.website.doa;
 
+import com.website.domains.Notification;
 import com.website.domains.User;
 
 import java.util.List;
@@ -21,4 +22,10 @@ public interface UserDao {
     List<String> getInvitedUsers(Integer id);
 
     List<String> getAcceptedUsers(Integer id);
+
+    long getNumberOfNotification(String username);
+
+    List<Object> getNotifications(String username);
+
+    void deleteNotification(Notification not);
 }

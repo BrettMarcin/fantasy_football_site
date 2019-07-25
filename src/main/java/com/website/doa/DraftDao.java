@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface DraftDao {
 
-    long getDraftCreatedByUser(int userId);
+    long getDraftCreatedByUser(String username);
 
     long countNumberOfDrafts();
 
@@ -49,4 +49,28 @@ public interface DraftDao {
     void insertPick(Picks pick);
 
     List<Object> getPicks(int draftId);
+
+    List<Object> getPlayersRemaining(int draftId);
+
+    void checkDraftsThatWereRunning();
+
+    void resumeDraft(int draftId);
+
+    void draftPlayer(int playerId, Picks pick);
+
+    Object getMostRecentPicksDraft(int draftId);
+
+    List<Object> getPickHistory(int draftId);
+
+    String getDraftOwner(int draftId);
+
+    List<Object> getPlayersTeamDrafted(int draftId, String username);
+
+    Object[] getLowestRankedPlayer(int draftId);
+
+    long checkPicksRemaining(int draftId);
+
+    void endDraft(int draftId);
+
+    List<Integer> getDraftRunning();
 }
