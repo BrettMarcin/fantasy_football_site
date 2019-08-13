@@ -1,11 +1,18 @@
 package com.website.domains;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import java.sql.Timestamp;
 
 import javax.persistence.*;
+import javax.swing.*;
 import javax.validation.constraints.NotNull;
-import java.security.Timestamp;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Entity
@@ -18,6 +25,7 @@ public class Draft {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
+    @JsonProperty
     private Date created;
 
 //    @ManyToOne(fetch = FetchType.EAGER)
@@ -35,14 +43,62 @@ public class Draft {
     @Column(name="is_public")
     boolean isPublic;
 
-    @ManyToMany(mappedBy = "acceptedDrafts")
-    List<User> usersAccepted;
+    @JsonProperty
+    @Column(name="was_running")
+    private String wasRunning;
 
-//    List<User> usersInvited;
+    @Transient
+    @JsonProperty
+    List<String> usersAccepted;
+
+    @Transient
+    @JsonProperty
+    List<String> usersInvited;
+
+    public Draft(List<Object> db) {
+        HashSet<String> userAccpetedFound = new HashSet<>();
+        HashSet<String> userInvitedFound = new HashSet<>();
+        int i = 0;
+        for (Object theOb : db) {
+            Object[] ob = (Object[])theOb;
+            if (i == 0) {
+                this.id = (Integer) ob[2];
+                Timestamp theDate = (Timestamp) ob[3];
+                this.created = new Date(theDate.getTime());
+                this.draftStarted = (Boolean) ob[4];
+                this.isPublic = (Boolean) ob[5];
+                this.setUserCreated(new User((String)ob[6]));
+                usersAccepted = new ArrayList<>();
+                usersInvited = new ArrayList<>();
+                this.wasRunning = (String)ob[7];
+            }
+            i++;
+            if (!userAccpetedFound.contains((String)ob[0])) {
+                usersAccepted.add((String)ob[0]);
+            }
+            if (!userInvitedFound.contains((String)ob[1])) {
+                usersInvited.add((String)ob[0]);
+            }
+        }
+    }
 
 //    List<String> draftOrder;
 
-    @PrePersist
+    public void buildDraft (Object db) {
+            Object[] ob = (Object[])db;
+            this.id = (Integer) ob[0];
+            Timestamp theDate = (Timestamp) ob[1];
+            this.created = new Date(theDate.getTime());
+            this.draftStarted = (Boolean) ob[2];
+            this.isPublic = (Boolean) ob[3];
+            this.setUserCreated(new User((String)ob[4]));
+            this.wasRunning = (String)ob[5];
+    }
+
+    public Draft() {
+
+    }
+
     protected void onCreate() {
         created = new Date();
     }
@@ -87,11 +143,27 @@ public class Draft {
         isPublic = aPublic;
     }
 
-    public List<User> getUsersAccepted() {
+    public List<String> getUsersAccepted() {
         return usersAccepted;
     }
 
-    public void setUsersAccepted(List<User> usersAccepted) {
+    public void setUsersAccepted(List<String> usersAccepted) {
         this.usersAccepted = usersAccepted;
+    }
+
+    public List<String> getUsersInvited() {
+        return usersInvited;
+    }
+
+    public void setUsersInvited(List<String> usersInvited) {
+        this.usersInvited = usersInvited;
+    }
+
+    public String getWasRunning() {
+        return wasRunning;
+    }
+
+    public void setWasRunning(String wasRunning) {
+        this.wasRunning = wasRunning;
     }
 }

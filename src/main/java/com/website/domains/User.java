@@ -45,22 +45,26 @@ public class User implements UserDetails {
     @JsonProperty
     private List<Role> roles;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userCreated")
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @Transient
     @JsonProperty
-    private List<Draft> draft;
+    private List<String> draft;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "draft_users_accepted",
-            joinColumns = { @JoinColumn(name = "users_name") },
-            inverseJoinColumns = { @JoinColumn(name = "draft_id") }
-    )
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @Transient
     @JsonProperty
-    private List<Draft> acceptedDrafts;
+    private List<String> acceptedDrafts;
+
+    @Transient
+    @JsonProperty
+    private List<String> invitedDrafts;
 
     public User (String name, String userName, String email, String password) {
+        this.name = name;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
+
+    public User (String userName) {
         this.name = name;
         this.userName = userName;
         this.email = email;

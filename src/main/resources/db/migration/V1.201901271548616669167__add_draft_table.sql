@@ -5,9 +5,11 @@ Create table draft (
 	created_at timestamp default current_timestamp,
 	draft_started tinyint(1) NOT NULL,
 	is_public tinyint(1) NOT NULL,
-	user_id int,
-	KEY user_id (user_id),
-	FOREIGN KEY (user_id) REFERENCES users(id)
+	user_created VARCHAR(100),
+	was_running VARCHAR(100) default 'no',
+	ended_at timestamp,
+	KEY user_created (user_created),
+	FOREIGN KEY (user_created) REFERENCES users(user_name)
 );
 
 -- drop table if exists users_roles;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class JwtTokenProvider {
 
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
+        claims.put("invalid", false);
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
@@ -48,6 +50,16 @@ public class JwtTokenProvider {
                 .setExpiration(validity)//
                 .signWith(SignatureAlgorithm.HS256, secretKey)//
                 .compact();
+    }
+
+    public void deleteToken(String token) {
+//        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().put("invalid", true);
+        Date today = Calendar.getInstance().getTime();
+        Jwts.parser().setSigningKey(secretKey).requireExpiration(today);
+        Jws<Claims> jwt = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+        System.out.println("here");
+        // TODO: Going to need to keep a list of tokens that are invalid in the database
+
     }
 
     public Authentication getAuthentication(String token) {
@@ -71,6 +83,9 @@ public class JwtTokenProvider {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             if (claims.getBody().getExpiration().before(new Date())) {
+                return false;
+            }
+            if ((boolean)claims.getBody().get("invalid")) {
                 return false;
             }
 
