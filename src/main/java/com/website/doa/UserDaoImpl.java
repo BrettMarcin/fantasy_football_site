@@ -47,10 +47,10 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean existsByEmail(String email) {
         String sql = "select count(*) as count from users where email=:email";
-        Query theQ = entityManager.createNativeQuery(sql, User.class);
+        Query theQ = entityManager.createNativeQuery(sql);
         theQ.setParameter("email", email);
-        int result = theQ.getMaxResults();
-        return result >= 1;
+        BigInteger theInt = (BigInteger)theQ.getSingleResult();
+        return theInt.longValue() >= 1;
     }
 
     @Override
