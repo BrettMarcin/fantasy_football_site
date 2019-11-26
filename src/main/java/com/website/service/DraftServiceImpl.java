@@ -98,6 +98,7 @@ public class DraftServiceImpl implements DraftService {
             theDrafts.setInvitedDrafts(newDraft);
         }
         listDraft = draftDao.getDraftsCreated(user);
+//        draftDao.get
         for (Object draft : listDraft) {
             Draft newDraft = new Draft();
             newDraft.buildDraft(draft);

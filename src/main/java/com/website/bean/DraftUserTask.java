@@ -50,7 +50,6 @@ public class DraftUserTask extends TimerTask {
 //            sendCurrentTime.scheduleAtFixedRate(sendTimeTask, 0,1000);
             DraftService draftService = BeanUtil.getBean(DraftService.class);
             draftService.draftHighestRankedPlayer(draftId);
-            System.out.println("Drafting user!");
         }
         numberTimeRan++;
     }
