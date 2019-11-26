@@ -1,5 +1,7 @@
 fantasy_football_site
 
+#### Java version 1.8
+
 ###start mysql
 ````
 sudo /usr/local/mysql/support-files/mysql.server start

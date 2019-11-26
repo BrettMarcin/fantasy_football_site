@@ -36,6 +36,9 @@ public class DraftController {
     @Autowired
     private DraftTimers draftTimers;
 
+    @Autowired
+    private SimpMessagingTemplate template;
+
 //    private SimpMessagingTemplate template;
 //
 //    @Autowired
@@ -158,5 +161,14 @@ public class DraftController {
     public ResponseEntity<?> deleteDraft(@AuthenticationPrincipal User userDetails, @PathVariable("draftId") Integer draftId) {
         draftService.deleteDraft(draftId);
         return new ResponseEntity(new ApiResponse(true, "Successfully deleted draft"), HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/sendMessage/{draftId}", method = RequestMethod.POST)
+    public ResponseEntity<?> sendMessage(@AuthenticationPrincipal User userDetails, @PathVariable("draftId") Integer draftId, @RequestBody Message msg) {
+        msg.setFrom(userDetails.getUsername());
+        String time = new SimpleDateFormat("HH:mm").format(new Date());
+        OutputMessage outpiut = new OutputMessage(msg.getFrom(), msg.getText(), time);
+        this.template.convertAndSend("/draft/chatRoom/"+String.valueOf(draftId), outpiut);
+        return ResponseEntity.ok(userService.getUsersInDraft(draftId));
     }
 }
